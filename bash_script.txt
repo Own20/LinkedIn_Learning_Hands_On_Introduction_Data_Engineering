@@ -1,0 +1,86 @@
+export AIRFLOW_HOME="/workspaces/hands-on-introduction-data-engineering-4395021/airflow" && pip install "apache-airflow==2.6.3" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.6.3/constraints-3.10.txt"
+
+airflow db init
+
+airflow users create --username admin --firstname Firstname --lastname Lastname --role Admin --email admin@example.org --password password
+
+
+
+
+
+airflow webserver -D
+
+https://didactic-meme-qggv5x9wggxf4rj4-8080.app.github.dev/home
+
+airflow dags list
+
+airflow scheduler -D
+
+ps -ef | grep -i webserver | grep master
+ps -ef | grep -i scheduler | grep -v grep | grep -v DagFileProcessorManager
+
+kill 13230
+kill 14372
+
+
+
+
+
+echo $AIRFLOW_HOME
+
+cat airflow/airflow.cfg | grep -oP '\[.*?\]'
+
+env | grep -i airflow
+
+cat $AIRFLOW_HOME/airflow-webserver.pid | xargs kill
+cat $AIRFLOW_HOME/airflow-scheduler.pid | xargs kill
+echo "" > $AIRFLOW_HOME/airflow-webserver.pid
+echo "" > $AIRFLOW_HOME/airflow-scheduler.pid
+
+airflow webserver -D
+airflow scheduler -D
+
+
+
+
+
+cat airflow/airflow.cfg | grep "dags_folder"
+
+python -W ignore airflow/dags/one_task_dag.py
+
+cat lab/temp/create-this-file.txt
+
+python airflow/dags/two_task_dag.py
+
+
+
+
+
+wget -c https://datahub.io/core/top-level-domain-names/r/top-level-domain-names.csv.csv -O /workspaces/hands-on-introduction-data-engineering-4395021/lab/manual/manual-extract-data.csv
+wget -c https://raw.githubusercontent.com/LinkedInLearning/hands-on-introduction-data-engineering-4395021/main/data/top-level-domain-names.csv -O /workspaces/hands-on-introduction-data-engineering-4395021/lab/manual/manual-extract-data.csv
+
+https://lnkd.in/gfENQi7K
+
+from datetime import date
+import pandas as pd
+df = pd.read_csv("manual-extract-data.csv")
+df
+df["Type"].unique()
+generic_type_df = df[df["Type"] == "generic"]
+generic_type_df
+today = date.today()
+generic_type_df["Date"] = today.strftime("%Y-%m-%d")
+generic_type_df.to_csv("manual-transform-data.csv", index=False)
+quit()
+
+sqlite3 manual-load-db.db
+.mode csv
+.import --skip 1 manual-transform-data.csv top_level_domains
+
+ctrl+shift+p
+sqlite3 create database
+sqlite3 open database
+show table
+
+cd lab/temp
+wget -c https://raw.githubusercontent.com/LinkedInLearning/hands-on-introduction-data-engineering-4395021/main/data/constituents.csv -O /workspaces/hands-on-introduction-data-engineering-4395021/lab/temp/constituents.csv
